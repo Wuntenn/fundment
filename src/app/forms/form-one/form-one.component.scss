@@ -1,0 +1,21 @@
+.formOne {
+  padding: 20px;
+}
+
+.formOne .title {
+  color: #747474;
+  font-size: 20px;
+  border-bottom: solid 1px #aaaaaa;
+  margin-bottom: 10px;
+}
+
+.fieldContainer input,
+.fieldContainer select,
+.fieldContainer label {
+  display: block;
+  width: 100%;
+}
+
+.btn {
+  margin-top: 10px;
+}

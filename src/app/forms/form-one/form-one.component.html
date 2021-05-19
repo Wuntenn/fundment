@@ -1,0 +1,75 @@
+<div [formGroup]="formOne" class="formOne">
+
+  <div class="row">
+    <div class="col-sm-12 text-center">
+      <p class="title">Form One</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 fieldContainer">
+      <label>Field 1:</label>
+      <input type="text" formControlName="field1">
+    </div>
+    <div class="col-sm-6 fieldContainer">
+      <label>Field 2:</label>
+      <select formControlName="field2">
+        <option [ngValue]="true">Yes</option>
+        <option [ngValue]="false">No</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 fieldContainer">
+      <label>Field 3:</label>
+      <select formControlName="field3">
+        <option [ngValue]="true">Yes</option>
+        <option [ngValue]="false">No</option>
+      </select>
+    </div>
+    <div class="col-sm-6 fieldContainer">
+      <label>Field 4:</label>
+      <input type="text" formControlName="field4">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 fieldContainer">
+      <label>Field 5:</label>
+      <input type="text" formControlName="field5">
+    </div>
+    <div class="col-sm-6 fieldContainer">
+      <label>Field 6:</label>
+      <input type="text" formControlName="field6">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 fieldContainer">
+      <label>Field 7:</label>
+      <select formControlName="field7">
+        <option [ngValue]="true">Yes</option>
+        <option [ngValue]="false">No</option>
+      </select>
+    </div>
+    <div class="col-sm-6 fieldContainer">
+      <label>Field 8:</label>
+      <input type="text" formControlName="field8">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 fieldContainer">
+      <label>Field 9:</label>
+      <input type="text" formControlName="field9">
+    </div>
+    <div class="col-sm-6 fieldContainer">
+      <label>Field 10:</label>
+      <input type="text" formControlName="field10">
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-md mt-2" (click)="logFormValue()">Submit</button>
+
+</div>
