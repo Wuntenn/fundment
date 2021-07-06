@@ -10,7 +10,7 @@ The aim of this task is to demonstrate the ability to create forms that produce 
 - Create DataTypeTwo, DataTypeThree, ..., DataTypeX as needed and add reactive forms in order to add these to the database.
 - Create conditional fields within each form along with validation.
 - Please use form-one.component.spec.ts to gather an idea of the conditions that should be placed upon DataTypeOne and other data structures you create.  
-  E.g. depending on the value of field2, field3 and field7, field10 should be either shown or hidden. If field10 is hidden it's value should not be included in the form value.
+  E.g. depending on the value of field2, field3 and field7, field10 should be either shown or hidden. If field10 is hidden its value should not be included in the form value.
 - At least one form should be “optional”, meaning the user must either fill in **all** fields or **none**.
 - Demonstrate usage of RxJs with Observables. Bonus points for data manipulation in Observabe stream, delayed responses, usage of Subject, reactive integration in templates, state management libraries, or mocking of state management principles.
 - Demonstrate usage of angular lifecycle hooks: ngOnInit, ngOnChanges and ngAfterViewInit.
