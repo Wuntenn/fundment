@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DataTypeOne } from '../../core/model/data.model';
+import { DataTypeOne } from '../../core/model/data.interface';
 
 @Component({
   selector: 'app-form-one',

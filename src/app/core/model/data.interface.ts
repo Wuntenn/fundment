@@ -1,4 +1,4 @@
-export type DataTypeOne = {
+export interface DataTypeOne {
   field1: string;
   field2: boolean;
   field3: boolean;
@@ -10,5 +10,3 @@ export type DataTypeOne = {
   field9: number;
   field10?: string;
 }
-
-
