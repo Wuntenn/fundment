@@ -14,6 +14,7 @@ The aim of this task is to demonstrate the ability to create forms that produce 
 - At least one form should be “optional”, meaning the user must either fill in **all** fields or **none**.
 - Demonstrate usage of RxJs with Observables. Bonus points for data manipulation in Observabe stream, delayed responses, usage of Subject, reactive integration in templates, state management libraries, or mocking of state management principles.
 - Demonstrate usage of angular lifecycle hooks: ngOnInit, ngOnChanges and ngAfterViewInit.
+- Please feel free to refactor any files, templates and structures according to your best judgement and revised design.
 - Adding unit tests is highly recommended.
 
 Optional:
