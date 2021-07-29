@@ -12,9 +12,9 @@ The aim of this task is to demonstrate the ability to create forms that produce 
 - Please use form-one.component.spec.ts to gather an idea of the conditions that should be placed upon DataTypeOne and other data structures you create.  
   E.g. depending on the value of field2, field3 and field7, field10 should be either shown or hidden. If field10 is hidden its value should not be included in the form value.
 - At least one form should be “optional”, meaning the user must either fill in **all** fields or **none**.
-- Demonstrate usage of RxJs with Observables. Bonus points for data manipulation in Observabe stream, delayed responses, usage of Subject, reactive integration in templates, state management libraries, or mocking of state management principles.
-- Demonstrate usage of angular lifecycle hooks: ngOnInit, ngOnChanges and ngAfterViewInit.
-- Please feel free to refactor any files, templates and structures according to your best judgement and revised design.
+- Demonstrate usage of RxJs with Observables. Bonus points for data manipulation in Observable stream using `pipe`able operators, delayed responses, usage of Subject, reactive integration in templates, state management libraries, or mocking of state management principles.
+- Demonstrate usage of angular lifecycle hooks (`ngOnInit`, `ngOnChanges`, `ngAfterViewInit`...).
+- Feel free to refactor any files, templates and structures according to your best judgement and revised design.
 - Adding unit tests is highly recommended.
 
 Optional:
