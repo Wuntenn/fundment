@@ -1,0 +1,43 @@
+import { BankAccount } from './bank-account.interface';
+
+export const BANK_ACCOUNTS: BankAccount[] = [{
+  id: 1,
+  bank_name: 'Bank A',
+  account_holder_name: 'Miss Jane A Smith',
+  sort_code: '111111',
+  account_number: '11111111',
+  client_id: 1,
+  current_value: 128746.281
+}, {
+  id: 2,
+  bank_name: 'Bank B',
+  account_holder_name: 'Thomas Christopher Wright',
+  sort_code: '222222',
+  account_number: '22222222',
+  client_id: 2,
+  current_value: 46.2
+}, {
+  id: 3,
+  bank_name: 'Bank C',
+  account_holder_name: 'Mr John Doe',
+  sort_code: '333333',
+  account_number: '33333333',
+  client_id: 3,
+  current_value: 123.82
+}, {
+  id: 4,
+  bank_name: 'Bank D',
+  account_holder_name: 'Mr T Wright',
+  sort_code: '444444',
+  account_number: '44444444',
+  client_id: 2,
+  current_value: 325480.82
+}, {
+  id: 5,
+  bank_name: 'Bank E',
+  account_holder_name: 'Jane Alexandra Smith',
+  sort_code: '555555',
+  account_number: '55555555',
+  client_id: 1,
+  current_value: 0
+}]
