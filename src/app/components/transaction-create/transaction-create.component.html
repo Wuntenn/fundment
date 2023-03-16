@@ -1,0 +1,53 @@
+<select #mode
+  (change)="onModeChange(mode.value)"
+>
+  <option value="deposit" selected>Deposit</option>
+  <option value="withdrawl">Withdrawl</option>
+  <option value="transfer">Transfer</option>
+</select>
+
+<form [formGroup]="transactionFormGroup">
+  <div *ngIf="selectedMode === ModeType.Withdrawl || selectedMode === ModeType.Transfer">
+    <app-dropdown 
+      dropdownId="source"
+      dropdownText="Source Account: "
+      [dropdownDataSrc]="accounts"
+      (onChange)="onSourceChange($event)"
+      [fCtrl]="transactionFormGroup.controls.source"
+    ></app-dropdown>
+  </div>
+  <div *ngIf="selectedMode === ModeType.Deposit || selectedMode === ModeType.Transfer">
+    <app-dropdown 
+      dropdownId="target"
+      dropdownText="Target Account: "
+      [dropdownDataSrc]="targetMenuAccounts"
+      [fCtrl]="transactionFormGroup.controls.target"
+    ></app-dropdown>
+  </div>
+  <div>
+    <label *ngif="selectedMode === ModeType.Withdrawl" for="maxwithdrawl">Would you like to withdraw the full value of this account?</label>
+    <input
+      id="maxwithdrawl"
+      type="checkbox"
+      formControlName="maxwithdrawl">
+  </div>
+  <div>
+    <label for="amount">Amount: </label>
+    <input
+      id="amount"
+      type="text"
+      formControlName="amount"
+    >
+  </div>
+  <div>
+    <label for="description">Description: </label>
+    <textarea
+      id="description"
+      type="textarea"
+      formControlName="description"
+    ></textarea>
+  </div>
+  <!--button (click)="">Submit</button-->
+</form>
+
+<pre>{{transactionFormGroup.status | json}}</pre>

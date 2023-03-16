@@ -1,0 +1,9 @@
+<div>
+  <label [for]="dropdownId">{{dropdownText}}</label>
+  <select #source [formControl]="fCtrl" [id]="dropdownId">
+    <option value="{{ { index: idx, data: account } | json }}" *ngFor="let account of dropdownDataSrc; index as idx">
+      {{account.account_holder_name}}
+    </option>
+  </select>
+</div>
+<!--pre> debug: {{datasource | keyvalue }}</pre-->
