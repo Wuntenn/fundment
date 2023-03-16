@@ -1,36 +1,34 @@
-<select #mode
-  (change)="onModeChange(mode.value)"
->
+<select>
   <option value="deposit" selected>Deposit</option>
   <option value="withdrawl">Withdrawl</option>
   <option value="transfer">Transfer</option>
 </select>
 
 <form [formGroup]="transactionFormGroup">
-  <div *ngIf="selectedMode === ModeType.Withdrawl || selectedMode === ModeType.Transfer">
+  <!--div *ngIf="selectedMode === Tra.WITHDRAW || selectedMode === ModeType.TRANSFER">
     <app-dropdown 
-      dropdownId="source"
+      dropdownId="source_bank_account_id"
       dropdownText="Source Account: "
       [dropdownDataSrc]="accounts"
       (onChange)="onSourceChange($event)"
-      [fCtrl]="transactionFormGroup.controls.source"
+      [fCtrl]="transactionFormGroup.controls.source_bank_account_id"
     ></app-dropdown>
   </div>
-  <div *ngIf="selectedMode === ModeType.Deposit || selectedMode === ModeType.Transfer">
+  <div *ngIf="selectedMode === ModeType.DEPOSIT || selectedMode === ModeType.TRANSFER">
     <app-dropdown 
-      dropdownId="target"
+      dropdownId="target_bank_account_id"
       dropdownText="Target Account: "
       [dropdownDataSrc]="targetMenuAccounts"
-      [fCtrl]="transactionFormGroup.controls.target"
+      [fCtrl]="transactionFormGroup.controls.target_bank_account_id"
     ></app-dropdown>
   </div>
   <div>
-    <label *ngif="selectedMode === ModeType.Withdrawl" for="maxwithdrawl">Would you like to withdraw the full value of this account?</label>
+    <label *ngif="selectedMode === ModeType.WITHDRAW" for="maxwithdrawl">Would you like to withdraw the full value of this account?</label>
     <input
       id="maxwithdrawl"
       type="checkbox"
       formControlName="maxwithdrawl">
-  </div>
+  </div-->
   <div>
     <label for="amount">Amount: </label>
     <input
@@ -47,7 +45,8 @@
       formControlName="description"
     ></textarea>
   </div>
-  <!--button (click)="">Submit</button-->
+  <button (click)="onSubmit()">Submit</button>
 </form>
 
-<pre>{{transactionFormGroup.status | json}}</pre>
+<pre>{{transactionFormGroup.value | json}}</pre>
+<pre>Validity: {{transactionFormGroup.status | json}}</pre>

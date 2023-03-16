@@ -4,9 +4,8 @@ import { filter, from, reduce } from 'rxjs';
 
 // Fundment libraries
 import { BankAccountService } from 'src/app/core/bank-account/bank-account.service';
+import { TransactionType } from 'src/app/core/transaction/transaction.interface';
 import { BankAccount } from '../../core/bank-account/bank-account.interface';
-
-import { Mode } from './mode.enum';
 
 // Validators
 import { validateSourceAccount, validateTargetAccount } from './transaction-create.validators';
@@ -19,11 +18,9 @@ import { validateSourceAccount, validateTargetAccount } from './transaction-crea
 })
 export class TransactionCreateComponent implements OnInit {
   accounts? : BankAccount[] = [];
-  selectedMode? : Mode;
+  selectedMode? : TransactionType;
   targetMenuAccounts? : BankAccount[] = [];
   transactionFormGroup: FormGroup;
-
-  public ModeType = Mode; 
 
   constructor(
     private accountService: BankAccountService,
@@ -39,16 +36,16 @@ export class TransactionCreateComponent implements OnInit {
   // Setup subscription to the source dropdown 
   // so that we can update the target correctly
   setupSourceSubs() {
-    this.transactionFormGroup.controls.source.valueChanges.subscribe(x => {
+    this.transactionFormGroup.controls.source_bank_account_id.valueChanges.subscribe(x => {
       this.onSourceChange(x);
     })
   }
 
   setupFormData() {
     this.transactionFormGroup = this.fb.group({
-      source: ['', validateSourceAccount(this.selectedMode)],
-      target: ['', validateTargetAccount(this.selectedMode)],
-      maxwithdrawl: [''],
+
+      source_bank_account_id: ['', validateSourceAccount(this.selectedMode)],
+      target_bank_account_id: ['', validateTargetAccount(this.selectedMode)],
       amount: [''],
       description: ['']
     },);
@@ -58,8 +55,8 @@ export class TransactionCreateComponent implements OnInit {
 
   // Get the bank accounts from the service
   initAccounts() {
-    // select mode
-    this.selectedMode = Mode.Deposit;
+    // Transaction Type: Todo Remove
+    this.selectedMode = TransactionType.DEPOSIT;
 
     this.accountService.getBankAccounts()
       .subscribe(bankAccounts => { 
@@ -74,16 +71,16 @@ export class TransactionCreateComponent implements OnInit {
   onModeChange(value: any) {
     switch (value) {
       case 'deposit':
-        this.selectedMode = Mode.Deposit;
+        this.selectedMode = TransactionType.DEPOSIT;
         break;
       case 'withdrawl':
-        this.selectedMode = Mode.Withdrawl;
+        this.selectedMode = TransactionType.WITHDRAW;
         break;
       case 'transfer':
-        this.selectedMode = Mode.Transfer;
+        this.selectedMode = TransactionType.TRANSFER;
         break;
       default: 
-        this.selectedMode = Mode.Withdrawl;
+        this.selectedMode = TransactionType.WITHDRAW;
         break;
     }
 
@@ -101,7 +98,7 @@ export class TransactionCreateComponent implements OnInit {
     const selectedSource = JSON.parse(selectedMenuItem);
     console.log('updating target menu data: ', selectedSource);
     
-    if (this.selectedMode === Mode.Transfer) {
+    if (this.selectedMode === TransactionType.TRANSFER) {
       from(this.accounts).pipe(
         filter(x => (x.client_id === selectedSource.data.client_id) && ((x.account_number !== selectedSource.data.account_number) && (x.sort_code !== selectedSource.data.sort_code))),
         reduce((acc, cur) => [...acc, cur], [])
@@ -115,6 +112,9 @@ export class TransactionCreateComponent implements OnInit {
 
   }
 
-
+  onSubmit() {
+    console.log('Submit attempted: ');
+    console.log('Form state: ', this.transactionFormGroup.getRawValue());
+  }
 
 }
