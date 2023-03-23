@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { filter, from, reduce } from 'rxjs';
+import { filter, find, from, groupBy, mergeMap, reduce, tap, map } from 'rxjs';
 
 // Fundment libraries
 import { BankAccountService } from 'src/app/core/bank-account/bank-account.service';
-import { TransactionType } from 'src/app/core/transaction/transaction.interface';
+import { TransactionCreate, TransactionType } from 'src/app/core/transaction/transaction.interface';
 import { BankAccount } from '../../core/bank-account/bank-account.interface';
 
 // Validators
@@ -22,6 +22,9 @@ export class TransactionCreateComponent implements OnInit {
   targetMenuAccounts? : BankAccount[] = [];
   transactionFormGroup: FormGroup;
 
+  // used by Template 
+  public ModeType = TransactionType; 
+
   constructor(
     private accountService: BankAccountService,
     private fb: FormBuilder
@@ -30,22 +33,30 @@ export class TransactionCreateComponent implements OnInit {
   ngOnInit(): void {
     this.initAccounts();
     this.setupFormData();
-    this.setupSourceSubs();
+    this.subscribeToSouceAccountChanges();
+    this.snapshot.bind(this);
   }
 
   // Setup subscription to the source dropdown 
   // so that we can update the target correctly
-  setupSourceSubs() {
-    this.transactionFormGroup.controls.source_bank_account_id.valueChanges.subscribe(x => {
-      this.onSourceChange(x);
-    })
+  subscribeToSouceAccountChanges() {
+    this.transactionFormGroup.controls.source_bank_account_id.valueChanges
+      .subscribe(selectedSourceAccountId => {
+        if (this.snapshot().transaction_type === 'TransactionType.TRANSFER') {
+          console.log('filtered targetAccountSource');
+          this.updateTargetMenuData(selectedSourceAccountId);
+        } else {
+          console.log('unfiltered targetAccountSource');
+          this.targetMenuAccounts = this.accounts;
+        } 
+      });
   }
 
   setupFormData() {
     this.transactionFormGroup = this.fb.group({
-
-      source_bank_account_id: ['', validateSourceAccount(this.selectedMode)],
-      target_bank_account_id: ['', validateTargetAccount(this.selectedMode)],
+      transaction_type: [''],
+      source_bank_account_id: ['null', validateSourceAccount(this.selectedMode)],
+      target_bank_account_id: ['null', validateTargetAccount(this.selectedMode)],
       amount: [''],
       description: ['']
     },);
@@ -56,65 +67,39 @@ export class TransactionCreateComponent implements OnInit {
   // Get the bank accounts from the service
   initAccounts() {
     // Transaction Type: Todo Remove
-    this.selectedMode = TransactionType.DEPOSIT;
+    //this.selectedMode = TransactionType.DEPOSIT;
 
     this.accountService.getBankAccounts()
       .subscribe(bankAccounts => { 
-        this.accounts = bankAccounts;
-        this.updateTargetMenuData(JSON.stringify({index: 0, data: this.accounts[0]}))
-
-        console.log('Init Accounts@TranactionCreate: this.accounts: ', this.accounts);
+        this.accounts = this.targetMenuAccounts = bankAccounts;
+        console.log('Init Accounts@TranactionCreate: this.accounts: ', this.accounts, ' this.targetMenuAccount: ', this.targetMenuAccounts);
       });
   }
 
-  // Allow the user to choose the transaction mode
-  onModeChange(value: any) {
-    switch (value) {
-      case 'deposit':
-        this.selectedMode = TransactionType.DEPOSIT;
-        break;
-      case 'withdrawl':
-        this.selectedMode = TransactionType.WITHDRAW;
-        break;
-      case 'transfer':
-        this.selectedMode = TransactionType.TRANSFER;
-        break;
-      default: 
-        this.selectedMode = TransactionType.WITHDRAW;
-        break;
-    }
-
-    console.log('Mode is: ', { mode: value, enumName: this.selectedMode});
-  }
-
-
-  // After updating the souce menu we need to update the target data 
-  onSourceChange(selectedMenuItem: any) {
-    this.updateTargetMenuData(selectedMenuItem);    
+  public snapshot() {
+    return this.transactionFormGroup.getRawValue();
   }
 
   // updates the target datasource based on the source menu selection
-  updateTargetMenuData(selectedMenuItem: any) {
-    const selectedSource = JSON.parse(selectedMenuItem);
-    console.log('updating target menu data: ', selectedSource);
-    
-    if (this.selectedMode === TransactionType.TRANSFER) {
-      from(this.accounts).pipe(
-        filter(x => (x.client_id === selectedSource.data.client_id) && ((x.account_number !== selectedSource.data.account_number) && (x.sort_code !== selectedSource.data.sort_code))),
-        reduce((acc, cur) => [...acc, cur], [])
+  updateTargetMenuData(selectedSourceAccountId: number) {
+    console.log('updating target menu data: ', selectedSourceAccountId);
+
+    from(this.accounts) 
+      .pipe(
+        find(x => x.id.toString(10) === selectedSourceAccountId.toString(10)),
+        mergeMap(srcAcc => from(this.accounts).pipe(reduce((acc, curr)=> { 
+          if ((srcAcc.client_id === curr.client_id) && (srcAcc.id !== curr.id)) acc.push(curr);
+          return acc;
+        }, [])))
       )
       .subscribe(filteredAccounts => {
         this.targetMenuAccounts = filteredAccounts;
-      })
-    } else {
-      this.targetMenuAccounts = this.accounts;
-    }
-
+      });
   }
 
   onSubmit() {
     console.log('Submit attempted: ');
-    console.log('Form state: ', this.transactionFormGroup.getRawValue());
+    console.log('Form state: ', this.snapshot());
   }
 
 }

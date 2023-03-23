@@ -1,34 +1,35 @@
-<select>
-  <option value="deposit" selected>Deposit</option>
-  <option value="withdrawl">Withdrawl</option>
-  <option value="transfer">Transfer</option>
+<label for="transactiontype">Select a transaction type: </label>
+<select id="transactiontype" [formControl]="transactionFormGroup.controls.transaction_type">
+  <option *ngFor="let opt of ModeType | keyvalue" value="TransactionType.{{opt.value}}" selected>{{opt.key | titlecase}}</option>
 </select>
 
 <form [formGroup]="transactionFormGroup">
-  <!--div *ngIf="selectedMode === Tra.WITHDRAW || selectedMode === ModeType.TRANSFER">
-    <app-dropdown 
-      dropdownId="source_bank_account_id"
-      dropdownText="Source Account: "
-      [dropdownDataSrc]="accounts"
-      (onChange)="onSourceChange($event)"
-      [fCtrl]="transactionFormGroup.controls.source_bank_account_id"
-    ></app-dropdown>
-  </div>
-  <div *ngIf="selectedMode === ModeType.DEPOSIT || selectedMode === ModeType.TRANSFER">
-    <app-dropdown 
-      dropdownId="target_bank_account_id"
-      dropdownText="Target Account: "
-      [dropdownDataSrc]="targetMenuAccounts"
-      [fCtrl]="transactionFormGroup.controls.target_bank_account_id"
-    ></app-dropdown>
-  </div>
-  <div>
-    <label *ngif="selectedMode === ModeType.WITHDRAW" for="maxwithdrawl">Would you like to withdraw the full value of this account?</label>
+  <!-- Withdraw or Transfer-->
+  <app-dropdown 
+    dropdownId="source"
+    dropdownText="Source Account: "
+    [dropdownDataSrc]="accounts"
+    (onChange)="onSourceChange($event)"
+    [fCtrl]="transactionFormGroup.controls.source_bank_account_id"
+    *ngIf="snapshot().transaction_type === 'TransactionType.WITHDRAW' || snapshot().transaction_type === 'TransactionType.TRANSFER'"
+  ></app-dropdown>
+
+  <!-- Deposit or Transfer-->
+  <app-dropdown 
+    dropdownId="target"
+    dropdownText="Target Account: "
+    [dropdownDataSrc]="targetMenuAccounts"
+    [fCtrl]="transactionFormGroup.controls.target_bank_account_id"
+    *ngIf="snapshot().transaction_type === 'TransactionType.DEPOSIT' || snapshot().transaction_type === 'TransactionType.TRANSFER'"
+  ></app-dropdown>
+
+  <div *ngif="selectedMode === ModeType.WITHDRAW">
+    <label for="maxwithdrawl">Would you like to withdraw the full value of this account?</label>
     <input
       id="maxwithdrawl"
       type="checkbox"
       formControlName="maxwithdrawl">
-  </div-->
+  </div>
   <div>
     <label for="amount">Amount: </label>
     <input
@@ -37,6 +38,7 @@
       formControlName="amount"
     >
   </div>
+
   <div>
     <label for="description">Description: </label>
     <textarea
@@ -50,3 +52,5 @@
 
 <pre>{{transactionFormGroup.value | json}}</pre>
 <pre>Validity: {{transactionFormGroup.status | json}}</pre>
+<pre>selectedMode: {{selectedMode}}</pre>
+<pre>transactionFormGroup.controls.transaction_type.value: {{transactionFormGroup.controls.transaction_type.value}}</pre>
