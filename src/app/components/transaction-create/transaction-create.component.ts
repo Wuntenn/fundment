@@ -45,7 +45,6 @@ export class TransactionCreateComponent implements OnInit {
     this.initAccounts();
     this.setupFormValidation();
     this.subscribeToSouceAccountCtrlChanges();
-    this.subscribeToTargetAccountCtrlChanges();
     this.subscribeToTransactionTypeChanges();
   }
 
@@ -119,8 +118,8 @@ export class TransactionCreateComponent implements OnInit {
   subscribeToTransactionTypeChanges() {
     this.transactionType.valueChanges
       .subscribe(transactionType => {
-        console.log('transaction type: ',transactionType);
         this.resetInnerFormData();
+        console.log('transaction type: ',transactionType);
       });
   }
 
@@ -129,39 +128,23 @@ export class TransactionCreateComponent implements OnInit {
    *  Setup Validation
    */
   setupValidatorWithSourceAccountAmount() {
-    console.log('@subToType: setValidators (source): group', this.sourceAccount.value);
-    console.log('@subToType: setValidators (target): group', this.targetAccount.value);
-    console.log('@subToType: setValidators (amount): group', this.amount.value);
-
     if (this.sourceAccount.value === null) return;
 
     this.accounts.pipe(
       concatMap(from),
       find((account: BankAccount) => parseInt(account.id.toString(), 10) === parseInt(this.sourceAccount.value, 10)),
     ).subscribe(srcBankAccount => {
-      console.log('updating class validators');
       this.sourceValidator = validateSourceAccount(this.transactionType.value, this.transactionFormGroup);
       this.targetValidator = validateTargetAccount(this.transactionType.value, this.transactionFormGroup);
       this.amountValidator = validateAmount(this.transactionType.value, this.transactionFormGroup, srcBankAccount);
       this.selectedSourceAcc = srcBankAccount;
 
-      console.log('applying validators');
       this.sourceAccount.setValidators(this.sourceValidator?.validationArray);
       this.targetAccount.setValidators(this.targetValidator?.validationArray);
       this.amount.setValidators(this.amountValidator?.validationArray);
-
     });
 
     this.transactionFormGroup.updateValueAndValidity();
-
-    const OKeys =  Object.keys(this.amountValidator?.validationFuncs || {});
-    console.log('keys:', OKeys);
-
-    OKeys.length && OKeys.forEach(key => {
-      if ((key === null) || (key === undefined)) return;
-      const valFn = this.amountValidator && this.amountValidator.validationFuncs[key]; 
-      console.log('Has validator for key: ', key, this.amount.hasValidator(valFn));
-    });
   }
 
   /**
@@ -171,8 +154,6 @@ export class TransactionCreateComponent implements OnInit {
   // updates the target datasource based on the source menu selection
   // Want same client_Id and diffent account_id
   updateTargetMenuData(selectedSourceAccountId: number) {
-    console.log('updating target menu data - Source account selected with Id: ', selectedSourceAccountId);
-
     if (selectedSourceAccountId == null) return;
 
     this.targetMenuAccounts = this.accounts.pipe(
@@ -189,12 +170,10 @@ export class TransactionCreateComponent implements OnInit {
   }
   
   updateTargetValidity() { 
-    console.log('validating target dd');
     this.targetAccount.updateValueAndValidity();
   }
 
   updateAmountValidity() { 
-    console.log('validating amount');
     this.amount.updateValueAndValidity()
   }
 
