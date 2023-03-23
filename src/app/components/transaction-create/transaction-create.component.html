@@ -11,7 +11,8 @@
     [dropdownDataSrc]="accounts"
     (onChange)="onSourceChange($event)"
     [fCtrl]="transactionFormGroup.controls.source_bank_account_id"
-    *ngIf="snapshot().transaction_type === 'TransactionType.WITHDRAW' || snapshot().transaction_type === 'TransactionType.TRANSFER'"
+    
+    *ngIf="snapshot.transaction_type === 'TransactionType.WITHDRAW' || snapshot.transaction_type === 'TransactionType.TRANSFER'"
   ></app-dropdown>
 
   <!-- Deposit or Transfer-->
@@ -20,23 +21,39 @@
     dropdownText="Target Account: "
     [dropdownDataSrc]="targetMenuAccounts"
     [fCtrl]="transactionFormGroup.controls.target_bank_account_id"
-    *ngIf="snapshot().transaction_type === 'TransactionType.DEPOSIT' || snapshot().transaction_type === 'TransactionType.TRANSFER'"
+    *ngIf="snapshot.transaction_type === 'TransactionType.DEPOSIT' || snapshot.transaction_type === 'TransactionType.TRANSFER'"
   ></app-dropdown>
 
-  <div *ngif="selectedMode === ModeType.WITHDRAW">
+  <div *ngIf="snapshot.transaction_type === 'TransactionType.WITHDRAW'">
     <label for="maxwithdrawl">Would you like to withdraw the full value of this account?</label>
     <input
       id="maxwithdrawl"
       type="checkbox"
-      formControlName="maxwithdrawl">
+      (click)="onFullAmountClicked()"
+    >
   </div>
-  <div>
+
+  <div *ngIf="!transferFullSourceAmount">
     <label for="amount">Amount: </label>
     <input
       id="amount"
-      type="text"
-      formControlName="amount"
+      type="number"
+      [formControl]="transactionFormGroup.controls.amount"
+      (blur)="updateAmountValidity()"
     >
+    <div *ngIf="transactionFormGroup.get('amount').errors?.aboveMax">Amount is above {{selectedSourceAcc.current_value}}</div>
+  </div>
+
+  <div *ngIf="amount.invalid && (amount.dirty || amount.touched)" class="alert">
+    <div *ngIf="amount.errors?.['required']">
+      Amount is required.
+    </div>
+    <div *ngIf="amount.errors?.['min']">
+      Amount must be greater than zero.
+    </div>
+    <div *ngIf="amount.errors?.['max']">
+      Amount cannot be greater than {{selectedSourceAcc.current_value}}
+    </div>
   </div>
 
   <div>
@@ -47,10 +64,21 @@
       formControlName="description"
     ></textarea>
   </div>
-  <button (click)="onSubmit()">Submit</button>
+  <button type="submit" (click)="onSubmit()" [disabled]="transactionFormGroup.invalid">Submit</button>
 </form>
 
-<pre>{{transactionFormGroup.value | json}}</pre>
+<!--pre>{{transactionFormGroup.value | json}}</pre>
+<pre>selectedSourceAcc{{selectedSourceAcc | json}}</pre>
 <pre>Validity: {{transactionFormGroup.status | json}}</pre>
 <pre>selectedMode: {{selectedMode}}</pre>
-<pre>transactionFormGroup.controls.transaction_type.value: {{transactionFormGroup.controls.transaction_type.value}}</pre>
+<pre>transactionType.value: {{transactionType.value}}</pre>
+<pre>snapshot.transaction_type: {{snapshot.transaction_type}}</pre>
+
+<pre>transactionFormGroup.errors?: {{transactionFormGroup.errors | json}}</pre>
+<pre>transactionType?.errors: {{transactionType?.errors | json}}</pre>
+<pre>sourceAccount?.errors: {{sourceAccount?.errors | json}}</pre>
+<pre>sourceAccount?.touched: {{sourceAccount?.touched | json}}</pre>
+<pre>sourceAccount?.dirty: {{sourceAccount?.dirty | json}}</pre>
+<pre>targetAccount?.errors: {{targetAccount?.errors | json}}</pre>
+<pre>amount?.errors: {{amount?.errors | json}}</pre>
+<pre>description?.errors: {{description?.errors | json}}</pre-->

@@ -1,7 +1,7 @@
 <div>
   <label [for]="dropdownId">{{dropdownText}}</label>
   <select #source [formControl]="fCtrl" [id]="dropdownId">
-    <option value="{{ account.id }}" *ngFor="let account of dropdownDataSrc">
+    <option value="{{ account.id }}" *ngFor="let account of dropdownDataSrc | async">
       {{account.account_holder_name}}
     </option>
   </select>
